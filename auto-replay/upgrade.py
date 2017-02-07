@@ -4,26 +4,32 @@ import random
 import requests
 from itchat.content import *
 
-replied = []
+replied = {}
 
 
 @itchat.msg_register([TEXT])
 def text_reply(msg):
-    if ('年' or '快乐' or '大吉' in msg['Text']) and msg['FromUserName'] not in replied:
-        sendGreeting(msg)
+    if ('年' or '快乐' or '大吉' in msg['Text']):
+        if (msg['FromUserName'] not in replied.keys() or replied[msg['FromUserName']] <= 5):
+            sendGreeting(msg)
+    else:
+        itchat.send(('你发的不是祝福，我还是祝你鸡年大吉吧'), msg['FromUserName'])
 
 
 @itchat.msg_register([PICTURE, RECORDING, VIDEO, SHARING])
 def other_reply(msg):
-    if msg['FromUserName'] not in replied:
+    if msg['FromUserName'] not in replied or replied[msg['FromUserName']] <= 5:
         sendGreeting(msg)
 
 
 def sendGreeting(msg):
     global replied
     friend = itchat.search_friends(userName=msg['FromUserName'])
-    itchat.send((friend['RemarkName'] + ', ' + getRandomGreeting()), msg['FromUserName'])
-    replied.append(msg['FromUserName'])
+    itchat.send((friend['RemarkName'] + '，' + getRandomGreeting()), msg['FromUserName'])
+    if msg['FromUserName'] not in replied.keys():
+        replied[msg['FromUserName']] = 1
+    else:
+        replied[msg['FromUserName']] += 1
 
 
 def getRandomGreeting():
