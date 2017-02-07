@@ -1,0 +1,9 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/happynewyear.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+.pyc
+auto-replay/QR.jpg
+auto-replay/itchat.pkl
